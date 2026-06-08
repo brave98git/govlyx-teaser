@@ -1,5 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CheckCircle, AlertCircle, Info, X, Rocket } from "lucide-react";
+import {
+  AlertCircle,
+  BarChart3,
+  Bell,
+  Building2,
+  CircleHelp,
+  Info,
+  MapPin,
+  MessageCircle,
+  Sparkles,
+  Rocket,
+  ShieldCheck,
+  Users,
+  X,
+} from "lucide-react";
 
 const APPS_SCRIPT_URL =
   import.meta.env.VITE_APPS_SCRIPT_URL ||
@@ -7,14 +21,75 @@ const APPS_SCRIPT_URL =
 
 const createLaunchDate = () => {
   const date = new Date("2026-04-18");
-  date.setDate(date.getDate() + 50);
+  date.setDate(date.getDate() + 70);
   date.setHours(0, 0, 0, 0);
   return date;
 };
 
-console.log(createLaunchDate());
-
 const formatTime = (value) => String(value).padStart(2, "0");
+
+const pillars = [
+  {
+    icon: MapPin,
+    title: "Area-based feed",
+    text: "See posts, issues and announcements from your street, ward, colony and district before anything else.",
+  },
+  {
+    icon: Building2,
+    title: "Government broadcasts",
+    text: "Departments can send schemes, water cuts, traffic alerts and emergency notices to the exact area affected.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Safer civic voice",
+    text: "Random public usernames help citizens report local problems without exposing their real identity.",
+  },
+  {
+    icon: Users,
+    title: "Organised communities",
+    text: "Create public, private or secret neighbourhood groups for RWAs, schools, colonies and local leaders.",
+  },
+];
+
+const issueSteps = [
+  "Post a civic issue from your area",
+  "Neighbours react, vote and add context",
+  "Govlyx escalates attention from ward to district",
+  "Department marks it resolved and notifies everyone",
+];
+
+const alertExamples = [
+  {
+    icon: Bell,
+    title: "Real-time alerts",
+    text: "Water cuts, power outages, traffic diversions and flood warnings sent only to citizens in the affected area.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Anonymous chat",
+    text: "Talk area-to-area with another citizen using protected random names, with future support for verified officials.",
+  },
+  {
+    icon: BarChart3,
+    title: "Smarter local signal",
+    text: "Hot, New and Top views help surface what matters now while the feed learns the topics you care about.",
+  },
+];
+
+const clueItems = [
+  {
+    icon: MapPin,
+    label: "Area-based access",
+  },
+  {
+    icon: Sparkles,
+    label: "Local stories waiting",
+  },
+  {
+    icon: CircleHelp,
+    label: "Are you in your area?",
+  },
+];
 
 const getTimeLeft = (launchDate) => {
   const diff = launchDate.getTime() - Date.now();
@@ -58,6 +133,7 @@ function App() {
   const glowRef = useRef(null);
   const dotRef = useRef(null);
   const topbarRef = useRef(null);
+  const heroRef = useRef(null);
 
   useEffect(() => {
     setTimeLeft(getTimeLeft(launchDate));
@@ -94,14 +170,23 @@ function App() {
 
     const handleScroll = () => {
       const topbar = topbarRef.current;
-      if (!topbar) return;
-      topbar.classList.toggle("scrolled", window.scrollY > 20);
+      const hero = heroRef.current;
+
+      if (topbar) {
+        topbar.classList.toggle("scrolled", window.scrollY > 20);
+      }
+
+      if (hero) {
+        const progress = Math.min(window.scrollY / 260, 1);
+        hero.style.setProperty("--hero-progress", progress.toFixed(3));
+      }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
@@ -247,10 +332,9 @@ function App() {
           Something is being built
         </div>
 
-        <h1 className="hero-headline">
-          Your City.
-          <br />
-          <span className="accent">Amplified.</span>
+        <h1 className="hero-headline" ref={heroRef}>
+          <span className="hero-word hero-word-left">Your City.</span>
+          <span className="hero-word hero-word-right accent">Amplified.</span>
         </h1>
 
         <div className="teaser-block">
@@ -266,18 +350,14 @@ function App() {
         </div>
 
         <div className="clue-row">
-          <div className="clue-card">
-            <span className="clue-num">6</span>
-            Digits that unlock everything
-          </div>
-          <div className="clue-card">
-            <span className="clue-num">∞</span>
-            Local stories waiting
-          </div>
-          <div className="clue-card">
-            <span className="clue-num">?</span>
-            Are you in your area?
-          </div>
+          {clueItems.map(({ icon: Icon, label }) => (
+            <div className="clue-card" key={label}>
+              <span className="clue-icon">
+                <Icon size={26} strokeWidth={2.6} />
+              </span>
+              {label}
+            </div>
+          ))}
         </div>
 
         <p className="countdown-label">Launching in</p>
@@ -332,6 +412,59 @@ function App() {
             </div>
           )}
         </div>
+
+        <section className="details-section" aria-label="Govlyx platform details">
+          <div className="section-kicker">Built around your area</div>
+          <h2>One civic layer for your neighbourhood.</h2>
+          <p className="section-copy">
+            Govlyx connects citizens, community leaders and government departments in one
+            local-first platform. No GPS. No long forms. Just your area.
+          </p>
+
+          <div className="pillar-grid">
+            {pillars.map(({ icon: Icon, title, text }) => (
+              <article className="pillar-card" key={title}>
+                <div className="pillar-icon">
+                  <Icon size={20} />
+                </div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="flow-section" aria-label="Civic issue lifecycle">
+          <div className="flow-copy">
+            <div className="section-kicker">Civic issue lifecycle</div>
+            <h2>Complaints should travel until they are heard.</h2>
+            <p className="section-copy">
+              A broken road, water problem or unsafe spot can grow from a local post into
+              a department-visible issue as more neighbours engage.
+            </p>
+          </div>
+
+          <div className="step-rail">
+            {issueSteps.map((step, index) => (
+              <div className="step-item" key={step}>
+                <span className="step-num">{index + 1}</span>
+                <p>{step}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="signal-section" aria-label="Govlyx feature signals">
+          {alertExamples.map(({ icon: Icon, title, text }) => (
+            <article className="signal-item" key={title}>
+              <Icon size={22} />
+              <div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            </article>
+          ))}
+        </section>
 
         <div className="socials">
           <a
@@ -416,11 +549,9 @@ function App() {
       </div>
 
       <footer>
-        <span>Made with ♥ for India</span>
-        <span>•</span>
+        <span>India first, neighbourhood always</span>
         <span>© 2026 Govlyx Inc.</span>
-        <span>•</span>
-        <span>Coming to your neighborhood soon</span>
+        <span>Coming soon</span>
       </footer>
 
       {popup.show && (
