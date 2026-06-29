@@ -1012,3 +1012,33 @@ footer {
     opacity: 1;
   }
 }
+
+.access-notice-box {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  backdrop-filter: blur(12px);
+  padding: 1.1rem 1.4rem;
+  border-radius: 16px;
+  max-width: 580px;
+  margin: 0 auto 3.5rem;
+  text-align: left;
+  color: #fca5a5;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.02);
+  opacity: 0;
+  animation: riseIn 0.9s ease forwards 0.7s;
+}
+
+.access-notice-box .notice-icon {
+  color: #f87171;
+  flex-shrink: 0;
+}
+
+.access-notice-box strong {
+  color: #fecaca;
+  font-weight: 600;
+}

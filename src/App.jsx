@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertCircle,
   BarChart3,
@@ -19,14 +19,7 @@ const APPS_SCRIPT_URL =
   import.meta.env.VITE_APPS_SCRIPT_URL ||
   "https://script.google.com/macros/s/AKfycbxSUkS36Dc0FQUIyPyQah9AStFyHhKM6wUdfPKxySoZPFgO6TEfyu65VN73yDE84WyN/exec";
 
-const createLaunchDate = () => {
-  const date = new Date("2026-04-18");
-  date.setDate(date.getDate() + 72);
-  date.setHours(0, 0, 0, 0);
-  return date;
-};
 
-const formatTime = (value) => String(value).padStart(2, "0");
 
 const pillars = [
   {
@@ -91,39 +84,14 @@ const clueItems = [
   },
 ];
 
-const getTimeLeft = (launchDate) => {
-  const diff = launchDate.getTime() - Date.now();
-  if (diff <= 0) {
-    return {
-      days: "00",
-      hours: "00",
-      mins: "00",
-      secs: "00",
-    };
-  }
 
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const mins = Math.floor((diff % 3600000) / 60000);
-  const secs = Math.floor((diff % 60000) / 1000);
-
-  return {
-    days: formatTime(days),
-    hours: formatTime(hours),
-    mins: formatTime(mins),
-    secs: formatTime(secs),
-  };
-};
-
-//date
 function App() {
   const [popup, setPopup] = useState({
     show: false,
     type: "", // success | error | info
     text: "",
   });
-  const launchDate = useMemo(createLaunchDate, []);
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft(launchDate));
+
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState(
@@ -135,14 +103,7 @@ function App() {
   const topbarRef = useRef(null);
   const heroRef = useRef(null);
 
-  useEffect(() => {
-    setTimeLeft(getTimeLeft(launchDate));
-    const intervalId = setInterval(() => {
-      setTimeLeft(getTimeLeft(launchDate));
-    }, 1000);
 
-    return () => clearInterval(intervalId);
-  }, [launchDate]);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -369,26 +330,10 @@ function App() {
           ))}
         </div>
 
-        <p className="countdown-label">Launching in</p>
-        <div className="countdown">
-          <div className="cd-unit">
-            <div className="cd-box">{timeLeft.days}</div>
-            <span className="cd-lbl">Days</span>
-          </div>
-          <div className="divider" />
-          <div className="cd-unit">
-            <div className="cd-box">{timeLeft.hours}</div>
-            <span className="cd-lbl">Hours</span>
-          </div>
-          <div className="divider" />
-          <div className="cd-unit">
-            <div className="cd-box">{timeLeft.mins}</div>
-            <span className="cd-lbl">Mins</span>
-          </div>
-          <div className="divider" />
-          <div className="cd-unit">
-            <div className="cd-box">{timeLeft.secs}</div>
-            <span className="cd-lbl">Secs</span>
+        <div className="access-notice-box">
+          <AlertCircle className="notice-icon" size={20} />
+          <div className="notice-text">
+            <strong>Registered emails get instant access starting today.</strong> Others will receive access within 24 hours.
           </div>
         </div>
 
